@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wi-Fi</title>
+    <title>WiFi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { 
@@ -11,7 +11,6 @@
             font-family: 'Inter', sans-serif;
             -webkit-user-select: none; user-select: none;
             -webkit-tap-highlight-color: transparent;
-            /* টাচ জুম অ্যাকশন ব্লক করা হয়েছে */
             touch-action: pan-x pan-y;
         }
 
@@ -69,12 +68,25 @@
 
         .copy-btn:active { transform: scale(0.96); }
 
-        .date-box {
+        .info-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .status-box, .date-box {
             display: flex; align-items: center; gap: 8px;
-            margin-bottom: 25px; background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
             padding: 8px 12px; border-radius: 12px; width: fit-content;
         }
+        
         .date { font-size: 13px; color: #94a3b8; }
+        .status-text { font-size: 13px; font-weight: 600; }
+
+        /* স্ট্যাটাস কালার লজিক */
+        .status-working { color: #10b981; } /* সবুজ */
+        .status-not-working { color: #ef4444; } /* লাল */
 
         #toast {
             visibility: hidden; min-width: 220px;
@@ -105,13 +117,13 @@
 
     <script>
         const wifiData = [
-            { ssid: "Nayem", date: "08 February 2026", pass: "43214321" },
-            { ssid: "Manik Molla", date: "08 April 2026", pass: "surujmolla" },
-            { ssid: "Monir topadar", date: "08 April 2026", pass: "12341234" },
-            { ssid: "Molla Networks", date: "08 April 2026", pass: "01955407770" },
-            { ssid: "Habib tapadar", date: "08 April 2026", pass: "habib916" },
-            { ssid: "Sakib Topadar 4G", date: "08 April 2026", pass: "12345678" },
-            { ssid: "Sakib Topadar 5G", date: "08 April 2026", pass: "12345678" }
+            { ssid: "Nayem", date: "08 February 2026", status: "Not Working", pass: "43214321" },
+            { ssid: "Manik Molla", date: "08 April 2026", status: "Working", pass: "surujmolla" },
+            { ssid: "Monir topadar", date: "08 April 2026", status: "Working", pass: "12341234" },
+            { ssid: "Molla Networks", date: "08 April 2026", status: "Working", pass: "01955407770" },
+            { ssid: "Habib tapadar", date: "08 April 2026", status: "Working", pass: "habib916" },
+            { ssid: "Sakib Topadar 4G", date: "08 April 2026", status: "Working", pass: "12345678" },
+            { ssid: "Sakib Topadar 5G", date: "08 April 2026", status: "Working", pass: "12345678" }
         ];
 
         function getDarkColor() {
@@ -145,12 +157,20 @@
             const randomGradient = getMegaGradient();
             const randomSpeed = (Math.random() * 60 + 120).toFixed(1); 
 
+            // স্ট্যাটাস অনুযায়ী ক্লাস নির্ধারণ
+            const statusClass = item.status.toLowerCase() === "working" ? "status-working" : "status-not-working";
+
             card.innerHTML = `
                 <div class="label">SSID Name</div>
                 <div class="ssid">${item.ssid}</div>
-                <div class="label">Last Updated</div>
-                <div class="date-box">
-                    <span class="date">${item.date}</span>
+                <div class="label">Network Info</div>
+                <div class="info-row">
+                    <div class="date-box">
+                        <span class="date">${item.date}</span>
+                    </div>
+                    <div class="status-box">
+                        <span class="status-text ${statusClass}">${item.status}</span>
+                    </div>
                 </div>
                 <button class="copy-btn" 
                     style="background: ${randomGradient}; background-size: 8000% 8000%; animation: dynamicRGB ${randomSpeed}s linear infinite;"
@@ -179,7 +199,7 @@
                 
                 setTimeout(() => { 
                     toast.classList.remove("show"); 
-                }, 3000);
+                }, 4000);
             });
         }
     </script>
